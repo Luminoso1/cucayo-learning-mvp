@@ -12,10 +12,31 @@ export const getLessonFn = createServerFn({ method: 'GET' })
   .inputValidator((data) => lessonParamsSchema.parse(data))
   .handler(async ({ data: { lessonSlug } }) => {
     const lesson = await db.query.lessons.findFirst({
-      where: (lessons, { eq }) => eq(lessons.slug, lessonSlug),
+      where: (lesson, { eq }) => eq(lesson.slug, lessonSlug),
+      with: {
+        blocks: {
+          orderBy: (blocks, { asc }) => [asc(blocks.order)],
+          with: {
+            question: {
+              with: {
+                options: {
+                  columns: {
+                    id: true,
+                    content: true,
+                    order: true,
+                    isCorrect: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     })
 
-    if (!lesson) return { success: false, error: 'lesson not found' }
+    if (!lesson || !lesson.blocks?.[0]) {
+      return { success: false, error: 'lesson not found' }
+    }
 
     return { success: true, data: lesson }
   })

@@ -30,10 +30,17 @@ export const questionTypeEnum = pgEnum('question_type', [
   'multiple_cloze',
 ])
 
+// course status
 export const courseStatusEnum = pgEnum('course_status', [
   'no_init',
   'in_progress',
   'completed',
+])
+
+// lesson sections type (content - assessment)
+export const lessonBlockEnum = pgEnum('lesson_block_type', [
+  'content',
+  'question',
 ])
 
 const slugGen = () =>
@@ -141,6 +148,22 @@ export const lessons = pgTable('lessons', {
 
   // AI key concepts
   keyConcepts: text('key_concepts').array(),
+})
+
+export const lessonBlocks = pgTable('lesson_block', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  lessonId: uuid('lesson_id')
+    .notNull()
+    .references(() => lessons.id, { onDelete: 'cascade' }),
+
+  type: lessonBlockEnum('type').notNull(),
+  order: integer('order').notNull(),
+
+  content: text('content'),
+
+  questionId: uuid('question_id').references(() => questions.id, {
+    onDelete: 'set null',
+  }),
 })
 
 // completed lessons
@@ -259,6 +282,7 @@ export const lessonsRelations = relations(lessons, ({ one, many }) => ({
     fields: [lessons.unitId],
     references: [units.id],
   }),
+  blocks: many(lessonBlocks),
   completions: many(lessonCompletions),
   assessments: many(assessments),
 }))
@@ -271,6 +295,17 @@ export const enrollmentsRelations = relations(enrollments, ({ one }) => ({
   student: one(profiles, {
     fields: [enrollments.studentId],
     references: [profiles.id],
+  }),
+}))
+
+export const leessonBlockRelations = relations(lessonBlocks, ({ one }) => ({
+  lesson: one(lessons, {
+    fields: [lessonBlocks.lessonId],
+    references: [lessons.id],
+  }),
+  question: one(questions, {
+    fields: [lessonBlocks.questionId],
+    references: [questions.id],
   }),
 }))
 

@@ -10,6 +10,7 @@ import {
   questions,
   questionOptions,
   assessmentQuestions,
+  lessonBlocks,
 } from './schema'
 import { eq } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
@@ -242,6 +243,74 @@ async function seed() {
 
           // --- SEED DE ASSESSMENT: Lección 1, Unidad 1 ---
           if (u.order === 1 && l.order === 1) {
+            console.log('📦 Insertando bloques para Lección 1...')
+
+            // BLOQUE 1: Introducción Teórica
+            await db.insert(lessonBlocks).values({
+              lessonId: insertedLesson.id,
+              type: 'content',
+              content: `## Introducción a la Ley 1273\nLa Ley 1273 de 2009 modificó el Código Penal colombiano para incluir la protección de la información y los datos...`,
+              order: 1,
+            })
+
+            // BLOQUE 2: Pregunta Interactiva (Multiple Choice)
+            const [q1] = await db
+              .insert(questions)
+              .values({
+                type: 'multiple_choise',
+                statement:
+                  '¿Cuál es el Bien Jurídico Tutelado por la Ley 1273?',
+                points: 10,
+                feedbackCorrect: '¡Exacto! Protege la información.',
+              })
+              .returning()
+
+            await db.insert(questionOptions).values([
+              { questionId: q1.id, content: 'Hardware', isCorrect: false },
+              {
+                questionId: q1.id,
+                content: 'Información y datos',
+                isCorrect: true,
+              },
+            ])
+
+            await db.insert(lessonBlocks).values({
+              lessonId: insertedLesson.id,
+              type: 'question',
+              questionId: q1.id,
+              order: 2,
+            })
+
+            // BLOQUE 3: Más contenido (Deep Dive)
+            await db.insert(lessonBlocks).values({
+              lessonId: insertedLesson.id,
+              type: 'content',
+              content: `### El Sujeto Activo\nEn estos delitos, el sujeto activo puede ser cualquier persona que acceda sin autorización...`,
+              order: 3,
+            })
+
+            // BLOQUE 4: Pregunta de Cloze (Completar)
+            const [q2] = await db
+              .insert(questions)
+              .values({
+                type: 'cloze',
+                statement:
+                  'La integridad de la evidencia se garantiza mediante un {{Hash}}.',
+                points: 15,
+              })
+              .returning()
+
+            await db
+              .insert(questionOptions)
+              .values([{ questionId: q2.id, content: 'Hash', isCorrect: true }])
+
+            await db.insert(lessonBlocks).values({
+              lessonId: insertedLesson.id,
+              type: 'question',
+              questionId: q2.id,
+              order: 4,
+            })
+            /*
             console.log('Inserting Quiz for Lesson 1...')
 
             // 1. Crear el Assessment (Contenedor)
@@ -398,6 +467,8 @@ async function seed() {
               { assessmentId: quiz.id, questionId: q4.id, order: 4 },
               { assessmentId: quiz.id, questionId: q5.id, order: 5 },
             ])
+
+          */
           }
         }
       }

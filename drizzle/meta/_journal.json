@@ -71,6 +71,13 @@
       "when": 1777677552321,
       "tag": "0009_flippant_human_torch",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1779314971920,
+      "tag": "0010_red_zemo",
+      "breakpoints": true
     }
   ]
 }
