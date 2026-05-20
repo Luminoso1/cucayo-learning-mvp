@@ -1,0 +1,110 @@
+[
+  {
+    "id": "7f3c9a12-8d4e-4b1a-9c33-21aa7e6b9011",
+    "nombre": "Algoritmos II - Módulo 3",
+    "descripcion": "Estructuras de datos avanzadas, árboles balanceados y grafos.",
+    "icon": "Code",
+    "tema": {
+      "borderColor": "border-primary",
+      "accentColor": "bg-primary",
+      "badgeBg": "bg-primary/10",
+      "badgeText": "text-primary"
+    },
+    "estado": "en_progreso",
+    "statusLabel": "En Progreso",
+    "duracionTotalMin": 320,
+    "remainingMinutes": 60,
+    "progress": 80,
+    "xp": 200
+  },
+  {
+    "id": "1c92ab44-33de-4fa2-bbb1-55b7f21ac002",
+    "nombre": "Base de Datos I",
+    "descripcion": "Modelado relacional, normalización y consultas SQL.",
+    "icon": "Database",
+    "tema": {
+      "borderColor": "border-red-500",
+      "accentColor": "bg-red-500",
+      "badgeBg": "bg-red-500/10",
+      "badgeText": "text-red-500"
+    },
+    "estado": "no_iniciado",
+    "statusLabel": "No Iniciado",
+    "duracionTotalMin": 300,
+    "remainingMinutes": 300,
+    "progress": 0,
+    "xp": 180
+  },
+  {
+    "id": "aa7d9921-ff12-4a89-8c77-9988abcc3103",
+    "nombre": "Cálculo Diferencial - Quiz",
+    "descripcion": "Derivadas parciales y aplicaciones prácticas.",
+    "icon": "Check",
+    "tema": {
+      "borderColor": "border-green-600",
+      "accentColor": "bg-green-600",
+      "badgeBg": "bg-green-600/10",
+      "badgeText": "text-green-600"
+    },
+    "estado": "completado",
+    "statusLabel": "Completado",
+    "duracionTotalMin": 310,
+    "remainingMinutes": 0,
+    "progress": 100,
+    "xp": 220
+  },
+  {
+    "id": "5e881234-778a-4cdd-91aa-0bcdeff44321",
+    "nombre": "Arquitectura de Computadores",
+    "descripcion": "Procesadores, memoria, jerarquía de caché y ensamblador básico.",
+    "icon": "Cpu",
+    "tema": {
+      "borderColor": "border-purple-500",
+      "accentColor": "bg-purple-500",
+      "badgeBg": "bg-purple-500/10",
+      "badgeText": "text-purple-500"
+    },
+    "estado": "en_progreso",
+    "statusLabel": "En Progreso",
+    "duracionTotalMin": 320,
+    "remainingMinutes": 140,
+    "progress": 55,
+    "xp": 210
+  },
+  {
+    "id": "9912ab77-6543-4eee-8abc-778899001122",
+    "nombre": "Redes de Computadores",
+    "descripcion": "Modelo OSI, TCP/IP, direccionamiento IP y protocolos.",
+    "icon": "Network",
+    "tema": {
+      "borderColor": "border-blue-500",
+      "accentColor": "bg-blue-500",
+      "badgeBg": "bg-blue-500/10",
+      "badgeText": "text-blue-500"
+    },
+    "estado": "no_iniciado",
+    "statusLabel": "No Iniciado",
+    "duracionTotalMin": 300,
+    "remainingMinutes": 300,
+    "progress": 0,
+    "xp": 190
+  },
+  {
+    "id": "bbcc1122-3344-5566-7788-99aabbccdd55",
+    "nombre": "Seguridad Informática",
+    "descripcion": "Criptografía, autenticación y seguridad en redes.",
+    "icon": "Shield",
+    "tema": {
+      "borderColor": "border-yellow-500",
+      "accentColor": "bg-yellow-500",
+      "badgeBg": "bg-yellow-500/10",
+      "badgeText": "text-yellow-500"
+    },
+    "estado": "completado",
+    "statusLabel": "Completado",
+    "duracionTotalMin": 310,
+    "remainingMinutes": 0,
+    "progress": 100,
+    "xp": 230
+  }
+]

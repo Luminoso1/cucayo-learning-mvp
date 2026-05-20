@@ -1,0 +1,35 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@plugin '@tailwindcss/typography';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/inter/900.css';
+
+@theme {
+  --color-primary: #d4a011;
+  --color-secondary: #07883b;
+
+  --color-background-light: #fdfbf7;
+  --color-primary-text: #423d33;
+  --color-secondary-text: #787163;
+}
+
+body {
+  font-family:
+    'Inter',
+    sans-serif,
+    -apple-system;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  margin: 0;
+
+  background-color: var(--color-background-light);
+  color: var(--color-primary-text);
+}
+
+code {
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
