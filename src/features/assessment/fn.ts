@@ -1,10 +1,9 @@
 import { createServerFn } from '@tanstack/react-start'
-import { authMiddleware } from '#/middleware/auth'
 import { studentMiddleware } from '#/middleware/student'
 import { db } from '#/lib/db'
 
 export const getAssessmentByLessonSlugFn = createServerFn({ method: 'GET' })
-  .middleware([authMiddleware, studentMiddleware])
+  .middleware([studentMiddleware])
   .inputValidator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
     const lessonData = await db.query.lessons.findFirst({
