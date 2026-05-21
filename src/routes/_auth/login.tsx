@@ -4,7 +4,10 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useSignIn } from '@/hooks/useSignIn'
 import toast from 'react-hot-toast'
+import { useQueryClient } from '@tanstack/react-query'
 import { ChefHat, Mail, Lock, Loader2, ArrowRight } from 'lucide-react'
+
+import { userQueryKey } from '#/features/auth/queries'
 
 export const LoginSchema = z.object({
   email: z.email({ message: 'Email no valido' }),
@@ -14,15 +17,17 @@ export const LoginSchema = z.object({
 export type Login = z.infer<typeof LoginSchema>
 
 const loginSearchSchema = z.object({
-  redirect: z.string().optional().catch(''),
+  redirect: z.string().optional().catch('/student'),
 })
 
 export const Route = createFileRoute('/_auth/login')({
+  validateSearch: (search) => loginSearchSchema.parse(search),
   component: RouteComponent,
 })
 
 function RouteComponent() {
   const router = useRouter()
+  const search = Route.useSearch()
 
   const {
     register,
@@ -46,12 +51,19 @@ function RouteComponent() {
   const password = watch('password')
   const isFormReady = password.length > 5
 
+  const queryClient = useQueryClient()
+
   const signInMutatation = useSignIn({
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('login successfully')
-      router.navigate({
-        to: '/student',
-        viewTransition: { types: [] },
+
+      queryClient.removeQueries({ queryKey: userQueryKey })
+
+      const destination = search.redirect
+
+      await router.navigate({
+        to: destination || '/student',
+        replace: true,
       })
     },
     onError: (error) => {
