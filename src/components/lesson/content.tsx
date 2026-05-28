@@ -12,7 +12,7 @@ const MarkdownComponents = {
     </p>
   ),
   h1: ({ children }: any) => (
-    <h1 className="text-2xl md:text-4xl font-bold mt-12 mb-6 text-primary-text tracking-tight border-b border-primary/20 pb-2">
+    <h1 className="text-2xl md:text-4xl font-bold mb-6 text-primary-text tracking-tight border-b border-primary/20 pb-2">
       {children}
     </h1>
   ),
@@ -62,6 +62,11 @@ const MarkdownComponents = {
     <td className="text-base md:text-xl p-4 text-secondary-text/90 border-b border-primary/5">
       {children}
     </td>
+  ),
+  blockquote: ({ children }: any) => (
+    <blockquote className="text-lg md:text-2xl leading-12 text-primary-text font-semibold">
+      {children}
+    </blockquote>
   ),
 }
 

@@ -82,6 +82,7 @@ function AssessmentStepper({
     if (!currentQuestion) return
 
     let correct = false
+
     if (type === 'multiple_choise') {
       const correctOption = currentQuestion.options.find(
         (o: any) => o.isCorrect,
@@ -111,7 +112,7 @@ function AssessmentStepper({
         ?.content.trim()
         .toLowerCase()
       correct = userInput === solution
-    } else if (type === 'multi_cloze') {
+    } else if (type === 'multiple_cloze') {
       const correctOptions = currentQuestion.options.filter(
         (o: any) => o.isCorrect,
       )

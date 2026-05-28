@@ -9,11 +9,11 @@ import {
   Donut,
 } from 'lucide-react'
 
-export const Route = createFileRoute('/_authenticated/student/calderos/$courseSlug/')(
-  {
-    component: RouteComponent,
-  },
-)
+export const Route = createFileRoute(
+  '/_authenticated/student/calderos/$courseSlug/',
+)({
+  component: RouteComponent,
+})
 
 function RouteComponent() {
   const { data } = useLoaderData({
@@ -135,6 +135,7 @@ function RouteComponent() {
                             courseSlug: course.slug,
                             lessonSlug: lesson.slug,
                           }}
+                          className={`${isLocked ? 'cursor-not-allowed pointer-events-none' : ''}`}
                         >
                           <div
                             className={`

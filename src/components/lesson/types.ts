@@ -1,8 +1,9 @@
 export interface Lesson {
-  duration: number | null
   id: string
+  duration: number | null
   slug: string
   title: string
+  content: string
   order: number
   unitId: string | null
   keyConcepts: string[] | null
