@@ -20,7 +20,7 @@ function RouteComponent() {
     from: '/_authenticated/student/calderos/$courseSlug',
   })
 
-  const { course, enrollment, units } = data
+  const { course, enrollment, units, canTakeAssessment } = data
   return (
     <div>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
@@ -206,6 +206,43 @@ function RouteComponent() {
             </article>
           ))}
         </div>
+
+        {canTakeAssessment ? (
+          <Link
+            to="/student/calderos/$courseSlug/assessment"
+            params={{
+              courseSlug: course.slug,
+            }}
+          >
+            <article className="bg-linear-to-r from-primary to-primary/80 text-white rounded-2xl p-6 shadow-xl">
+              <div className="flex items-center gap-4">
+                <Brain className="size-10" />
+
+                <div>
+                  <h3 className="font-black text-xl">Examen Final del Curso</h3>
+
+                  <p className="opacity-90">20 preguntas • 60 minutos</p>
+                </div>
+              </div>
+            </article>
+          </Link>
+        ) : (
+          <article className="bg-stone-100 rounded-2xl p-6 border border-stone-200">
+            <div className="flex items-center gap-4">
+              <Lock className="size-8 text-stone-500" />
+
+              <div>
+                <h3 className="font-bold text-stone-700">
+                  Examen Final Bloqueado
+                </h3>
+
+                <p className="text-stone-500 text-sm">
+                  Completa todas las lecciones para desbloquearlo.
+                </p>
+              </div>
+            </div>
+          </article>
+        )}
       </div>
     </div>
   )

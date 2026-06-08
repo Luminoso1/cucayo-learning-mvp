@@ -4,7 +4,7 @@ import { db } from '#/lib/db'
 
 export const getAssessmentByLessonSlugFn = createServerFn({ method: 'GET' })
   .middleware([studentMiddleware])
-  .inputValidator((slug: string) => slug)
+  .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
     const lessonData = await db.query.lessons.findFirst({
       where: (lessons, { eq }) => eq(lessons.slug, slug),

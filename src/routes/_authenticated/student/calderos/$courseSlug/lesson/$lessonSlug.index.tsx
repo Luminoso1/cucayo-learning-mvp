@@ -18,5 +18,5 @@ function RouteComponent() {
 
   if (!success) return <div>{error}</div>
 
-  return <Lesson {...data} />
+  return <Lesson lesson={data} />
 }

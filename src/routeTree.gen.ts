@@ -27,6 +27,7 @@ import { Route as AuthenticatedStudentCalderosIndexRouteImport } from './routes/
 import { Route as AuthenticatedStudentCalderosCourseSlugRouteImport } from './routes/_authenticated/student/calderos/$courseSlug'
 import { Route as AuthenticatedTutorCoursesCourseSlugIndexRouteImport } from './routes/_authenticated/tutor/courses/$courseSlug/index'
 import { Route as AuthenticatedStudentCalderosCourseSlugIndexRouteImport } from './routes/_authenticated/student/calderos/$courseSlug/index'
+import { Route as AuthenticatedStudentCalderosCourseSlugAssessmentRouteImport } from './routes/_authenticated/student/calderos/$courseSlug/assessment'
 import { Route as AuthenticatedTutorCoursesCourseSlugLessonLessonSlugRouteImport } from './routes/_authenticated/tutor/courses/$courseSlug/lesson.$lessonSlug'
 import { Route as AuthenticatedStudentCalderosCourseSlugLessonLessonSlugRouteImport } from './routes/_authenticated/student/calderos/$courseSlug/lesson/$lessonSlug'
 import { Route as AuthenticatedStudentCalderosCourseSlugLessonLessonSlugIndexRouteImport } from './routes/_authenticated/student/calderos/$courseSlug/lesson/$lessonSlug.index'
@@ -130,6 +131,12 @@ const AuthenticatedStudentCalderosCourseSlugIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedStudentCalderosCourseSlugRoute,
   } as any)
+const AuthenticatedStudentCalderosCourseSlugAssessmentRoute =
+  AuthenticatedStudentCalderosCourseSlugAssessmentRouteImport.update({
+    id: '/assessment',
+    path: '/assessment',
+    getParentRoute: () => AuthenticatedStudentCalderosCourseSlugRoute,
+  } as any)
 const AuthenticatedTutorCoursesCourseSlugLessonLessonSlugRoute =
   AuthenticatedTutorCoursesCourseSlugLessonLessonSlugRouteImport.update({
     id: '/courses/$courseSlug/lesson/$lessonSlug',
@@ -176,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/student/calderos/$courseSlug': typeof AuthenticatedStudentCalderosCourseSlugRouteWithChildren
   '/student/calderos/': typeof AuthenticatedStudentCalderosIndexRoute
   '/tutor/courses/': typeof AuthenticatedTutorCoursesIndexRoute
+  '/student/calderos/$courseSlug/assessment': typeof AuthenticatedStudentCalderosCourseSlugAssessmentRoute
   '/student/calderos/$courseSlug/': typeof AuthenticatedStudentCalderosCourseSlugIndexRoute
   '/tutor/courses/$courseSlug/': typeof AuthenticatedTutorCoursesCourseSlugIndexRoute
   '/student/calderos/$courseSlug/lesson/$lessonSlug': typeof AuthenticatedStudentCalderosCourseSlugLessonLessonSlugRouteWithChildren
@@ -195,6 +203,7 @@ export interface FileRoutesByTo {
   '/student': typeof AuthenticatedStudentIndexRoute
   '/student/calderos': typeof AuthenticatedStudentCalderosIndexRoute
   '/tutor/courses': typeof AuthenticatedTutorCoursesIndexRoute
+  '/student/calderos/$courseSlug/assessment': typeof AuthenticatedStudentCalderosCourseSlugAssessmentRoute
   '/student/calderos/$courseSlug': typeof AuthenticatedStudentCalderosCourseSlugIndexRoute
   '/tutor/courses/$courseSlug': typeof AuthenticatedTutorCoursesCourseSlugIndexRoute
   '/tutor/courses/$courseSlug/lesson/$lessonSlug': typeof AuthenticatedTutorCoursesCourseSlugLessonLessonSlugRoute
@@ -219,6 +228,7 @@ export interface FileRoutesById {
   '/_authenticated/student/calderos/$courseSlug': typeof AuthenticatedStudentCalderosCourseSlugRouteWithChildren
   '/_authenticated/student/calderos/': typeof AuthenticatedStudentCalderosIndexRoute
   '/_authenticated/tutor/courses/': typeof AuthenticatedTutorCoursesIndexRoute
+  '/_authenticated/student/calderos/$courseSlug/assessment': typeof AuthenticatedStudentCalderosCourseSlugAssessmentRoute
   '/_authenticated/student/calderos/$courseSlug/': typeof AuthenticatedStudentCalderosCourseSlugIndexRoute
   '/_authenticated/tutor/courses/$courseSlug/': typeof AuthenticatedTutorCoursesCourseSlugIndexRoute
   '/_authenticated/student/calderos/$courseSlug/lesson/$lessonSlug': typeof AuthenticatedStudentCalderosCourseSlugLessonLessonSlugRouteWithChildren
@@ -243,6 +253,7 @@ export interface FileRouteTypes {
     | '/student/calderos/$courseSlug'
     | '/student/calderos/'
     | '/tutor/courses/'
+    | '/student/calderos/$courseSlug/assessment'
     | '/student/calderos/$courseSlug/'
     | '/tutor/courses/$courseSlug/'
     | '/student/calderos/$courseSlug/lesson/$lessonSlug'
@@ -262,6 +273,7 @@ export interface FileRouteTypes {
     | '/student'
     | '/student/calderos'
     | '/tutor/courses'
+    | '/student/calderos/$courseSlug/assessment'
     | '/student/calderos/$courseSlug'
     | '/tutor/courses/$courseSlug'
     | '/tutor/courses/$courseSlug/lesson/$lessonSlug'
@@ -285,6 +297,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/calderos/$courseSlug'
     | '/_authenticated/student/calderos/'
     | '/_authenticated/tutor/courses/'
+    | '/_authenticated/student/calderos/$courseSlug/assessment'
     | '/_authenticated/student/calderos/$courseSlug/'
     | '/_authenticated/tutor/courses/$courseSlug/'
     | '/_authenticated/student/calderos/$courseSlug/lesson/$lessonSlug'
@@ -427,6 +440,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudentCalderosCourseSlugIndexRouteImport
       parentRoute: typeof AuthenticatedStudentCalderosCourseSlugRoute
     }
+    '/_authenticated/student/calderos/$courseSlug/assessment': {
+      id: '/_authenticated/student/calderos/$courseSlug/assessment'
+      path: '/assessment'
+      fullPath: '/student/calderos/$courseSlug/assessment'
+      preLoaderRoute: typeof AuthenticatedStudentCalderosCourseSlugAssessmentRouteImport
+      parentRoute: typeof AuthenticatedStudentCalderosCourseSlugRoute
+    }
     '/_authenticated/tutor/courses/$courseSlug/lesson/$lessonSlug': {
       id: '/_authenticated/tutor/courses/$courseSlug/lesson/$lessonSlug'
       path: '/courses/$courseSlug/lesson/$lessonSlug'
@@ -489,12 +509,15 @@ const AuthenticatedStudentCalderosCourseSlugLessonLessonSlugRouteWithChildren =
   )
 
 interface AuthenticatedStudentCalderosCourseSlugRouteChildren {
+  AuthenticatedStudentCalderosCourseSlugAssessmentRoute: typeof AuthenticatedStudentCalderosCourseSlugAssessmentRoute
   AuthenticatedStudentCalderosCourseSlugIndexRoute: typeof AuthenticatedStudentCalderosCourseSlugIndexRoute
   AuthenticatedStudentCalderosCourseSlugLessonLessonSlugRoute: typeof AuthenticatedStudentCalderosCourseSlugLessonLessonSlugRouteWithChildren
 }
 
 const AuthenticatedStudentCalderosCourseSlugRouteChildren: AuthenticatedStudentCalderosCourseSlugRouteChildren =
   {
+    AuthenticatedStudentCalderosCourseSlugAssessmentRoute:
+      AuthenticatedStudentCalderosCourseSlugAssessmentRoute,
     AuthenticatedStudentCalderosCourseSlugIndexRoute:
       AuthenticatedStudentCalderosCourseSlugIndexRoute,
     AuthenticatedStudentCalderosCourseSlugLessonLessonSlugRoute:

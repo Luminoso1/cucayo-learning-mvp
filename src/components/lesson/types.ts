@@ -1,20 +1,34 @@
+export interface Block {
+  id: string
+  lessonId: string
+  type: 'content' | 'question'
+  order: number
+
+  content: string | null
+
+  questionId: string | null
+  question: Question | null
+}
+
 export interface Lesson {
   id: string
-  duration: number | null
   slug: string
+  unitId: string | null
   title: string
   content: string
+  duration: number | null
   order: number
-  unitId: string | null
-  keyConcepts: string[] | null
+
   blocks: Block[]
+
+  keyConcepts: string[] | null
 }
 
 export interface Option {
-  content: string
   id: string
-  order: number | null
+  content: string
   isCorrect: boolean | null
+  order: number | null
 }
 
 export interface Question {
@@ -31,14 +45,4 @@ export interface Question {
   feedbackCorrect: string | null
   feedbackError: string | null
   options: Option[]
-}
-
-export interface Block {
-  content: string | null
-  id: string
-  order: number
-  lessonId: string
-  type: 'content' | 'question'
-  questionId: string | null
-  question: Question
 }

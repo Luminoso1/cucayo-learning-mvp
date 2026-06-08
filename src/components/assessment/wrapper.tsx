@@ -1,30 +1,28 @@
-import type { Block as BlockType } from './types'
-import { useLessonStore } from '#/lib/store/lesson'
-import { questionRenderers } from './question.render.tsx'
+import { useAssessmentStore } from '#/lib/store/assessment'
+import { questionRenderers } from '../lesson/question.render.tsx' 
 
 interface Props {
-  block: BlockType
+  question: {
+    id: string
+    type: string
+    statement: string
+    options: any[]
+  }
 }
 
-export default function Question({ block }: Props) {
-  const { id: blockId, question } = block
-  const { type } = question!
+export default function AssessmentQuestionWrapper({ question }: Props) {
+  const { id: questionId, type } = question
 
-  const savedResponse = useLessonStore((s) => s.responses[blockId])
-  const setBlockResponse = useLessonStore((s) => s.setBlockResponse)
+  const savedResponse = useAssessmentStore((s) => s.responses[questionId])
+  const setQuestionResponse = useAssessmentStore((s) => s.setQuestionResponse)
 
   const selectedAnswer =
     savedResponse?.selectedAnswer ??
     (type === 'multiple_cloze' || type === 'ordering' ? null : '')
 
-  const isEvaluated = savedResponse?.isEvaluated ?? false
-  const isCorrect = savedResponse?.isCorrect ?? null
-
   const handleAnswerChange = (newAnswer: any) => {
-    setBlockResponse(blockId, {
+    setQuestionResponse(questionId, {
       selectedAnswer: newAnswer,
-      isEvaluated: false,
-      isCorrect: null,
     })
   }
 
@@ -40,8 +38,8 @@ export default function Question({ block }: Props) {
                 question={question}
                 value={selectedAnswer}
                 onChange={handleAnswerChange}
-                disabled={isEvaluated}
-                isCorrect={isCorrect}
+                disabled={false} // En los exámenes nunca se bloquea la opción al avanzar, se puede re-editar al regresar
+                isCorrect={null} // Ocultamos el feedback visual en tiempo real
               />
             ) : (
               <p className="text-red-500">

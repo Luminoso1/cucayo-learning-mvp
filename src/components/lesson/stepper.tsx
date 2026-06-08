@@ -1,56 +1,42 @@
 import { useState, useEffect } from 'react'
-import type { Block as BlockType } from './types'
+import type { Block as BlockType, Lesson as LessonType } from './types'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 import Content from './content'
 import Question from './question'
 import Summary from './summary'
 import { useLessonStore } from '#/lib/store/lesson'
 import { questionValidators } from './question.validators'
+import { generateSocraticBlockFn } from '#/lib/lessons/fn'
 
 import { cn } from '#/lib/utils/index.ts'
 
 interface Props {
-  lessonId: string
-  lessonTitle: string
-  lessonContent: string
-  blocks: BlockType[]
+  lesson: LessonType
 }
 
-export default function Stepper({
-  lessonId,
-  lessonTitle,
-  lessonContent,
-  blocks: initialBlocks,
-}: Props) {
-  const [blocks, setBlocks] = useState<BlockType[]>(initialBlocks)
+export default function Stepper({ lesson }: Props) {
+  const { id: lessonId, blocks: initialBlocks, title, content } = lesson
 
+  const blocks = useLessonStore((s) => s.blocks)
   const current = useLessonStore((s) => s.index)
   const setCurrent = useLessonStore((s) => s.setIndex)
   const init = useLessonStore((s) => s.init)
 
-  const isFinished = current >= blocks.length
-
-  const block = !isFinished ? blocks[current] : null
-  const progress = blocks.length > 0 ? (current / blocks.length) * 100 : 0
+  const [isLoadingTutor, setIsLoadingTutor] = useState(false)
 
   useEffect(() => {
-    init(lessonId)
-  }, [lessonId, init])
+    init(lessonId, initialBlocks)
+  }, [lessonId, initialBlocks, init])
 
-  const onLessonComplete = () => {
-    console.log('complete lesson with id: ')
-
-    //do complete lesson action
-
-    // window.history.back()
-  }
+  const isFinished = current >= blocks.length
+  const block = !isFinished ? blocks[current] : null
+  const progress = blocks.length > 0 ? (current / blocks.length) * 100 : 0
 
   const handleNext = () => {
     if (current < blocks.length - 1) {
       setCurrent(current + 1)
     } else {
       setCurrent(blocks.length)
-      onLessonComplete()
     }
   }
 
@@ -58,22 +44,10 @@ export default function Stepper({
     if (current > 0) setCurrent(current - 1)
   }
 
-  const handleInjectSocraticBlock = (block: BlockType) => {
-    setBlocks((prev) => {
-      const newBlocks = [...prev]
-      newBlocks.splice(current + 1, 0, block)
-      return newBlocks
-    })
-  }
-
   if (isFinished) {
     return (
       <div className="flex-1 w-full overflow-y-auto bg-white min-h-screen">
-        <Summary
-          lessonTitle={lessonTitle}
-          lessonContent={lessonContent}
-          blocks={blocks}
-        />
+        <Summary lesson={lesson} />
       </div>
     )
   }
@@ -82,6 +56,18 @@ export default function Stepper({
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center mx-auto w-full">
+      {isLoadingTutor && (
+        <div className="absolute inset-0 bg-background-light/80 z-50 flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-200">
+          <div className="size-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+          <h3 className="text-xl font-black text-stone-900">
+            El Tutor Socrático está analizando tu respuesta...
+          </h3>
+          <p className="text-stone-500 max-w-xs">
+            Preparando un nuevo enfoque personalizado para ti.
+          </p>
+        </div>
+      )}
+
       {/* block body */}
       <div className="flex-1 flex flex-col overflow-y-auto w-full">
         <Header progress={progress} current={current} total={blocks.length} />
@@ -99,11 +85,15 @@ export default function Stepper({
       </div>
 
       <Footer
+        lessonTitle={title}
+        lessonContent={content}
         block={block}
+        currentIndex={current}
         onNext={handleNext}
         onPrevious={handlePrevious}
         hasPrevious={current > 0}
         hasNext={current < blocks.length}
+        setIsLoadingTutor={setIsLoadingTutor}
       />
     </div>
   )
@@ -154,18 +144,27 @@ const Progress = ({
 }
 
 const Footer = ({
+  lessonTitle,
+  lessonContent,
   block,
+  currentIndex,
   onNext,
   onPrevious,
   hasPrevious,
   hasNext,
+  setIsLoadingTutor,
 }: {
+  lessonTitle: string
+  lessonContent: string
   block: BlockType
+  currentIndex: number
   onNext: () => void
   onPrevious: () => void
   hasPrevious: boolean
   hasNext: boolean
+  setIsLoadingTutor: (loading: boolean) => void
 }) => {
+  const lessonId = useLessonStore((s) => s.lessonId)
   const setBlockResponse = useLessonStore((s) => s.setBlockResponse)
   const currentResponse = useLessonStore((s) => s.responses[block.id])
 
@@ -174,13 +173,15 @@ const Footer = ({
   const isEvaluated = isContent ? true : (currentResponse?.isEvaluated ?? false)
   const isCorrect = isContent ? true : (currentResponse?.isCorrect ?? false)
 
+  const injectSocraticBlocks = useLessonStore((s) => s.injectSocraticBlocks)
+
   const hasSelectedSomething = isContent
     ? true
     : currentResponse?.selectedAnswer !== undefined &&
       currentResponse?.selectedAnswer !== '' &&
       currentResponse?.selectedAnswer !== null
 
-  const handleAction = () => {
+  const handleAction = async () => {
     if (isContent || isEvaluated) {
       onNext()
       return
@@ -196,6 +197,26 @@ const Footer = ({
         isEvaluated: true,
         isCorrect: correct,
       })
+
+      if (!correct) {
+        setIsLoadingTutor(true)
+        try {
+          const remedialBlocks = await generateSocraticBlockFn({
+            data: {
+              lessonId: lessonId!,
+              failedQuestion: block.question,
+              userAnswer: answer,
+              lessonContext: { title: lessonTitle, content: lessonContent },
+            },
+          })
+
+          injectSocraticBlocks(currentIndex, remedialBlocks)
+        } catch (error) {
+          console.error('Error generando respuesta socrática:', error)
+        } finally {
+          setIsLoadingTutor(false)
+        }
+      }
     }
   }
 

@@ -84,9 +84,18 @@ export const getCourseDetailFn = createServerFn({ method: 'GET' })
       }),
     }))
 
+    const totalLessons = detail.units.flatMap((u) => u.lessons).length
+    const completedLessons = detail.units
+      .flatMap((u) => u.lessons)
+      .filter((l) => l.completions.length > 0).length
+
+    const canTakeAssessment =
+      totalLessons > 0 && completedLessons === totalLessons
+
     return {
       course: detail,
       enrollment: detail.enrollments[0] ?? null,
       units: unitsWithStatus ?? [],
+      canTakeAssessment,
     }
   })

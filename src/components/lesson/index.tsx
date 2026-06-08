@@ -1,10 +1,12 @@
 import Stepper from './stepper'
 import type { Lesson as LessonType } from './types'
 
-function Lesson(params: LessonType) {
-  const { id, blocks, title, content } = params
+interface Props {
+  lesson: LessonType
+}
 
-  if (blocks.length === 0) {
+function Lesson({ lesson }: Props) {
+  if (lesson.blocks.length === 0) {
     return (
       <div className="fixed inset-0 bg-background-light z-50 flex items-center justify-center font-sans">
         <div className="text-center space-y-3">
@@ -19,12 +21,7 @@ function Lesson(params: LessonType) {
 
   return (
     <div className="fixed inset-0 overflow-y-auto bg-background-light z-50 flex flex-col font-sans">
-      <Stepper
-        lessonId={id}
-        lessonTitle={title}
-        lessonContent={content}
-        blocks={blocks}
-      />
+      <Stepper lesson={lesson} />
     </div>
   )
 }

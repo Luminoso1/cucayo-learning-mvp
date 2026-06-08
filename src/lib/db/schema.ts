@@ -150,6 +150,11 @@ export const lessons = pgTable('lessons', {
   keyConcepts: text('key_concepts').array(),
 })
 
+export type LessonInsert = typeof lessons.$inferInsert
+export type BlockInsert = typeof lessonBlocks.$inferInsert
+export type QuestionInsert = typeof questions.$inferInsert
+export type OptionInsert = typeof questionOptions.$inferInsert
+
 export const lessonBlocks = pgTable('lesson_block', {
   id: uuid('id').defaultRandom().primaryKey(),
   lessonId: uuid('lesson_id')
@@ -184,20 +189,18 @@ export const lessonCompletions = pgTable(
 // assessments
 export const assessments = pgTable('assessment', {
   id: uuid().defaultRandom().primaryKey(),
-  title: text('title').notNull(),
-  type: assessmentTypeEnum('type').notNull(),
 
-  lessonId: uuid('lesson_id').references(() => lessons.id, {
-    onDelete: 'cascade',
-  }),
-  unitId: uuid('unit_id').references(() => units.id, { onDelete: 'cascade' }),
-  courseId: uuid('course_id').references(() => courses.id, {
-    onDelete: 'cascade',
-  }),
+  courseId: uuid('course_id')
+    .notNull()
+    .references(() => courses.id, {
+      onDelete: 'cascade',
+    }),
+
+  title: text('title').notNull(),
 
   points: integer('points').default(100).notNull(),
   passingScore: integer('passing_score').default(70).notNull(), // 70% min to pass
-  timeLimit: integer('time_limit'), // minutes
+  timeLimit: integer('time_limit').default(60).notNull(), // minutes
 
   createdAt: timestamp('completedAt').defaultNow().notNull(),
 })
@@ -237,6 +240,8 @@ export const assessmentQuestions = pgTable(
       .notNull()
       .references(() => questions.id),
     order: integer('order').notNull(),
+
+    points: integer('points').default(5).notNull(),
   },
   (table) => [primaryKey({ columns: [table.assessmentId, table.questionId] })],
 )
@@ -325,13 +330,8 @@ export const lessonCompletionsRelations = relations(
 
 // assessment relations
 export const assessmentRelations = relations(assessments, ({ one, many }) => ({
-  lesson: one(lessons, {
-    fields: [assessments.lessonId],
-    references: [lessons.id],
-  }),
-  unit: one(units, { fields: [assessments.unitId], references: [units.id] }),
   course: one(courses, {
-    fields: [assessments.unitId],
+    fields: [assessments.courseId],
     references: [courses.id],
   }),
 
